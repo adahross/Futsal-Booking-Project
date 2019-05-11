@@ -12,40 +12,46 @@ import java.io.Serializable;
  * @author USER
  */
 public class creditcard implements Serializable {
+
     private String fullname, cvv, cardNo, month, year;
 
-    public String getFullname(){
+    public String getFullname() {
         return fullname;
     }
-    public void setFullname(String fullname){
+
+    public void setFullname(String fullname) {
         this.fullname = fullname;
     }
 
-    public String getCVV(){
+    public String getCVV() {
         return cvv;
     }
-    public void setCVV(String cvv){
+
+    public void setCVV(String cvv) {
         this.cvv = cvv;
     }
 
-    public String getCardNo(){
+    public String getCardNo() {
         return cardNo;
     }
-    public void setCardNo(String cardNo){
+
+    public void setCardNo(String cardNo) {
         this.cardNo = cardNo;
     }
 
-    public String getMonth(){
+    public String getMonth() {
         return month;
     }
-    public void setMonth(String month){
+
+    public void setMonth(String month) {
         this.month = month;
     }
 
-    public String getYear(){
+    public String getYear() {
         return year;
     }
-    public void setYear(String year){
+
+    public void setYear(String year) {
         this.year = year;
     }
 }

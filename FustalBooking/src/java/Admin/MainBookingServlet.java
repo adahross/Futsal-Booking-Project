@@ -28,12 +28,11 @@ import jdbc.JDBCUtility;
  */
 @WebServlet(name = "MainBookingServlet", urlPatterns = {"/MainBookingServlet"})
 public class MainBookingServlet extends HttpServlet {
-    
+
     private JDBCUtility jdbcUtility;
     private Connection con;
-    
-    public void init() throws ServletException
-    {
+
+    public void init() throws ServletException {
         String driver = "com.mysql.jdbc.Driver";
 
         String dbName = "futsal";
@@ -42,9 +41,9 @@ public class MainBookingServlet extends HttpServlet {
         String password = "";
 
         jdbcUtility = new JDBCUtility(driver,
-                                      url,
-                                      userName,
-                                      password);
+                url,
+                userName,
+                password);
 
         jdbcUtility.jdbcConnect();
         con = jdbcUtility.jdbcGetConnection();
@@ -62,27 +61,27 @@ public class MainBookingServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        
-        ArrayList bkList = new ArrayList();        
-        
-        String sqlQuery = "SELECT booking.username, booking.bookingID, booking.bookingStat, court.courtType, court.courtName,booking.book_date" +
-                          " FROM booking, court" +
-                          " WHERE booking.courtID = court.courtID" +
-                          " ORDER BY  bookingID ASC";
-        
+
+        ArrayList bkList = new ArrayList();
+
+        String sqlQuery = "SELECT booking.username, booking.bookingID, booking.bookingStat, court.courtType, court.courtName,booking.book_date"
+                + " FROM booking, court"
+                + " WHERE booking.courtID = court.courtID"
+                + " ORDER BY  bookingID ASC";
+
         System.out.println(sqlQuery);
         try {
             PreparedStatement preparedStatement = con.prepareStatement(sqlQuery);
             ResultSet rs = preparedStatement.executeQuery();
-            
+
             while (rs.next()) {
                 int bookingID = Integer.parseInt(rs.getString("bookingID"));
                 String bookingStat = rs.getString("bookingStat");
                 String username = rs.getString("username");
-                String courtType = rs.getString("courtType");  
+                String courtType = rs.getString("courtType");
                 String courtName = rs.getString("courtName");
                 String bookingDate = rs.getString("book_date");
-                                
+
                 Booking bk = new Booking();
                 bk.setBookingID(bookingID);
                 bk.setBookingStat(bookingStat);
@@ -93,12 +92,11 @@ public class MainBookingServlet extends HttpServlet {
                 System.out.println(bk.getBookingID());
                 bkList.add(bk);
             }
-        }
-        catch (SQLException ex) {  
+        } catch (SQLException ex) {
             PrintWriter out = response.getWriter();
             out.println(ex);
         }
-        
+
         session.setAttribute("mainbooking", bkList);
         response.sendRedirect(request.getContextPath() + "/mainbooking.jsp");
     }

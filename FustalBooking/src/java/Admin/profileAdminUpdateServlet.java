@@ -29,9 +29,8 @@ public class profileAdminUpdateServlet extends HttpServlet {
 
     private JDBCUtility jdbcUtility;
     private Connection con;
-    
-    public void init() throws ServletException
-    {
+
+    public void init() throws ServletException {
         String driver = "com.mysql.jdbc.Driver";
 
         String dbName = "futsal";
@@ -40,13 +39,14 @@ public class profileAdminUpdateServlet extends HttpServlet {
         String password = "";
 
         jdbcUtility = new JDBCUtility(driver,
-                                      url,
-                                      userName,
-                                      password);
+                url,
+                userName,
+                password);
 
         jdbcUtility.jdbcConnect();
         con = jdbcUtility.jdbcGetConnection();
-    } 
+    }
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -62,44 +62,41 @@ public class profileAdminUpdateServlet extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             //Get the session object
-	HttpSession session = request.getSession();
-        
-        User user = (User)session.getAttribute("memberprofile");
-        String username = user.getUsername();
-        
-        //get form data from VIEW > V-I        
-        String password = request.getParameter("password");
-        String fullname = request.getParameter("fullname");
-        String phoneNo = request.getParameter("phoneNo");
-        String email = request.getParameter("email");
-        
-        String sqlUpdate = "UPDATE user SET password= ?, fullname= ?, phoneNo= ?, email= ?  WHERE username= ?"; 
-        
-        try {
-            PreparedStatement preparedStatement = con.prepareStatement(sqlUpdate);
-            preparedStatement.setString(1, password);
-            preparedStatement.setString(2, fullname);
-            preparedStatement.setString(3, phoneNo);
-            preparedStatement.setString(4, email);
-            preparedStatement.setString(5, username);
-            preparedStatement.executeUpdate();
-            
-            
-            
-        }
-        catch (Exception ex) {       
-            out.println(ex);
-        }
-        int usertype = user.getUsertype();
-        user = new User();
-        user.setUsername(username);
-        user.setPassword(password);
-        user.setUsertype(usertype);
-        user.setFullname(fullname);
-        user.setPhoneNo(phoneNo);
-        user.setEmail(email);
-        session.setAttribute("memberprofile",user);
-        response.sendRedirect(request.getContextPath() + "/viewprofileadmin.jsp");  
+            HttpSession session = request.getSession();
+
+            User user = (User) session.getAttribute("memberprofile");
+            String username = user.getUsername();
+
+            //get form data from VIEW > V-I        
+            String password = request.getParameter("password");
+            String fullname = request.getParameter("fullname");
+            String phoneNo = request.getParameter("phoneNo");
+            String email = request.getParameter("email");
+
+            String sqlUpdate = "UPDATE user SET password= ?, fullname= ?, phoneNo= ?, email= ?  WHERE username= ?";
+
+            try {
+                PreparedStatement preparedStatement = con.prepareStatement(sqlUpdate);
+                preparedStatement.setString(1, password);
+                preparedStatement.setString(2, fullname);
+                preparedStatement.setString(3, phoneNo);
+                preparedStatement.setString(4, email);
+                preparedStatement.setString(5, username);
+                preparedStatement.executeUpdate();
+
+            } catch (Exception ex) {
+                out.println(ex);
+            }
+            int usertype = user.getUsertype();
+            user = new User();
+            user.setUsername(username);
+            user.setPassword(password);
+            user.setUsertype(usertype);
+            user.setFullname(fullname);
+            user.setPhoneNo(phoneNo);
+            user.setEmail(email);
+            session.setAttribute("memberprofile", user);
+            response.sendRedirect(request.getContextPath() + "/viewprofileadmin.jsp");
         }
     }
 

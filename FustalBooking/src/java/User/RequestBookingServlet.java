@@ -29,12 +29,11 @@ import jdbc.JDBCUtility;
  */
 @WebServlet(name = "RequestBookingServlet", urlPatterns = {"/RequestBookingServlet"})
 public class RequestBookingServlet extends HttpServlet {
-    
-     private JDBCUtility jdbcUtility;
+
+    private JDBCUtility jdbcUtility;
     private Connection con;
-    
-    public void init() throws ServletException
-    {
+
+    public void init() throws ServletException {
         String driver = "com.mysql.jdbc.Driver";
 
         String dbName = "futsal";
@@ -43,12 +42,13 @@ public class RequestBookingServlet extends HttpServlet {
         String password = "";
 
         jdbcUtility = new JDBCUtility(driver,
-                                      url,
-                                      userName,
-                                      password);
+                url,
+                userName,
+                password);
 
         jdbcUtility.jdbcConnect();
-        con = jdbcUtility.jdbcGetConnection(); }
+        con = jdbcUtility.jdbcGetConnection();
+    }
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -64,80 +64,75 @@ public class RequestBookingServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             HttpSession session = request.getSession();
-            User user = (User)session.getAttribute("memberprofile"); 
+            User user = (User) session.getAttribute("memberprofile");
             int courtID = Integer.parseInt(request.getParameter("courtID"));
             String courtType = request.getParameter("courtType");
             String courtName = request.getParameter("courtName");
             String book_date = request.getParameter("bookdate");
             out.println(book_date);
-        
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-        Date date = new Date();
-        try {
-            
-            date = formatter.parse(book_date);
-        } catch (Exception ex) {            
-        }
-        
-        //convert to mysql date
-        formatter = new SimpleDateFormat("yyyy-MM-dd");
-        book_date = formatter.format(date);        
-        
-                   
-           
+
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+            Date date = new Date();
+            try {
+
+                date = formatter.parse(book_date);
+            } catch (Exception ex) {
+            }
+
+            //convert to mysql date
+            formatter = new SimpleDateFormat("yyyy-MM-dd");
+            book_date = formatter.format(date);
+
             String username = user.getUsername();
             String sqlInsert = "INSERT INTO booking(courtName, courtType, bookingStat, courtID, username, payStatus, book_date) VALUES(?, ?, 'pending', ?, ?, 'pending',?)";
-            
-              try {
-                  
-            PreparedStatement preparedStatement = con.prepareStatement(sqlInsert);
-            
-            preparedStatement.setString(1, courtName);
-            preparedStatement.setString(2, courtType);
-            preparedStatement.setInt(3, courtID);
-            preparedStatement.setString(4, username);
-            preparedStatement.setString(5, book_date);
-            preparedStatement.executeUpdate();
-            
-            //get price using courtID
-            String sqlQuery = "SELECT * FROM booking";            
-            preparedStatement = con.prepareStatement(sqlQuery);
-            ResultSet rs = preparedStatement.executeQuery();
-            Booking br = new Booking();
-            while (rs.next()) {
-            
-            int court_ID=rs.getInt("courtID");
-            String cName = rs.getString("courtName");
-            String cType = rs.getString("courtType");
-            int bookID = rs.getInt("bookingID"); 
-            String bookingStat = rs.getString("bookingStat");
-            String payStatus = rs.getString("payStatus");
-            String bookdate = rs.getString("book_date");
-            String uname = rs.getString("username"); 
-            
-            br.setCourtID(court_ID);               
-            br.setUsername(uname);
-            br.setBookDate(bookdate);
-            br.setCourtType(cType);
-            br.setBookingStat(bookingStat);
-            br.setPayStatus(payStatus);   
-            br.setBookingID(bookID);
-            br.setCourtName(cName);
 
+            try {
+
+                PreparedStatement preparedStatement = con.prepareStatement(sqlInsert);
+
+                preparedStatement.setString(1, courtName);
+                preparedStatement.setString(2, courtType);
+                preparedStatement.setInt(3, courtID);
+                preparedStatement.setString(4, username);
+                preparedStatement.setString(5, book_date);
+                preparedStatement.executeUpdate();
+
+                //get price using courtID
+                String sqlQuery = "SELECT * FROM booking";
+                preparedStatement = con.prepareStatement(sqlQuery);
+                ResultSet rs = preparedStatement.executeQuery();
+                Booking br = new Booking();
+                while (rs.next()) {
+
+                    int court_ID = rs.getInt("courtID");
+                    String cName = rs.getString("courtName");
+                    String cType = rs.getString("courtType");
+                    int bookID = rs.getInt("bookingID");
+                    String bookingStat = rs.getString("bookingStat");
+                    String payStatus = rs.getString("payStatus");
+                    String bookdate = rs.getString("book_date");
+                    String uname = rs.getString("username");
+
+                    br.setCourtID(court_ID);
+                    br.setUsername(uname);
+                    br.setBookDate(bookdate);
+                    br.setCourtType(cType);
+                    br.setBookingStat(bookingStat);
+                    br.setPayStatus(payStatus);
+                    br.setBookingID(bookID);
+                    br.setCourtName(cName);
+
+                }
+
+                session.setAttribute("newly", br);
+
+                response.sendRedirect(request.getContextPath() + "/reqbookstatus.jsp");
+            } catch (SQLException ex) {
+
+                out.println(ex);
+                ex.printStackTrace();
             }
-           
-            
-           
-            session.setAttribute("newly", br);  
-                      
-           response.sendRedirect(request.getContextPath() + "/reqbookstatus.jsp");
-        }
-        catch (SQLException ex) {
-            
-            out.println(ex);
-            ex.printStackTrace();
-        } 
-            
+
         }
     }
 

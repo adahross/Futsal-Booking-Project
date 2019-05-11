@@ -27,12 +27,11 @@ import jdbc.JDBCUtility;
  */
 @WebServlet(name = "getCourtServlet", urlPatterns = {"/getCourtServlet"})
 public class getCourtServlet extends HttpServlet {
-    
+
     private JDBCUtility jdbcUtility;
     private Connection con;
-    
-    public void init() throws ServletException
-    {
+
+    public void init() throws ServletException {
         String driver = "com.mysql.jdbc.Driver";
 
         String dbName = "futsal";
@@ -41,12 +40,12 @@ public class getCourtServlet extends HttpServlet {
         String password = "";
 
         jdbcUtility = new JDBCUtility(driver,
-                                      url,
-                                      userName,
-                                      password);
+                url,
+                userName,
+                password);
 
         jdbcUtility.jdbcConnect();
-        con = jdbcUtility.jdbcGetConnection(); 
+        con = jdbcUtility.jdbcGetConnection();
     }
 
     /**
@@ -60,22 +59,22 @@ public class getCourtServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         HttpSession session = request.getSession();
-        
-        ArrayList courtList = new ArrayList();        
-        
-        String sqlQuery = "SELECT * FROM court ORDER BY courtName ASC";        
+
+        ArrayList courtList = new ArrayList();
+
+        String sqlQuery = "SELECT * FROM court ORDER BY courtName ASC";
         try {
             PreparedStatement preparedStatement = con.prepareStatement(sqlQuery);
             ResultSet rs = preparedStatement.executeQuery();
-            
+
             while (rs.next()) {
                 String courtName = rs.getString("courtName");
                 String courtType = rs.getString("courtType");
                 String courtStat = rs.getString("courtStat");
                 int courtID = rs.getInt("courtID");
-                
+
                 Court court = new Court();
                 court.setCourtName(courtName);
                 court.setCourtType(courtType);
@@ -83,12 +82,11 @@ public class getCourtServlet extends HttpServlet {
                 court.setCourtID(courtID);
                 courtList.add(court);
             }
+        } catch (SQLException ex) {
         }
-        catch (SQLException ex) {            
-        }
-        
+
         session.setAttribute("courtlist", courtList);
-        response.sendRedirect(request.getContextPath() + "/bookcourt.jsp"); 
+        response.sendRedirect(request.getContextPath() + "/bookcourt.jsp");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

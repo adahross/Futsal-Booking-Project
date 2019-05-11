@@ -27,9 +27,8 @@ public class HomeUserServlet extends HttpServlet {
 
     private JDBCUtility jdbcUtility;
     private Connection con;
-    
-    public void init() throws ServletException
-    {
+
+    public void init() throws ServletException {
         String driver = "com.mysql.jdbc.Driver";
 
         String dbName = "futsal";
@@ -38,13 +37,13 @@ public class HomeUserServlet extends HttpServlet {
         String password = "";
 
         jdbcUtility = new JDBCUtility(driver,
-                                      url,
-                                      userName,
-                                      password);
+                url,
+                userName,
+                password);
 
         jdbcUtility.jdbcConnect();
         con = jdbcUtility.jdbcGetConnection();
-    } 
+    }
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -60,15 +59,14 @@ public class HomeUserServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            
-             HttpSession session = request.getSession();
-        
-        User user = (User)session.getAttribute("memberprofile");
-        String username = user.getUsername();
-        
-        ArrayList bookList = new ArrayList();    
-           
-           
+
+            HttpSession session = request.getSession();
+
+            User user = (User) session.getAttribute("memberprofile");
+            String username = user.getUsername();
+
+            ArrayList bookList = new ArrayList();
+
         }
     }
 

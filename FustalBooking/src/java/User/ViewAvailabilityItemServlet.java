@@ -33,9 +33,8 @@ public class ViewAvailabilityItemServlet extends HttpServlet {
 
     private JDBCUtility jdbcUtility;
     private Connection con;
-    
-    public void init() throws ServletException
-    {
+
+    public void init() throws ServletException {
         String driver = "com.mysql.jdbc.Driver";
 
         String dbName = "futsal";
@@ -44,12 +43,14 @@ public class ViewAvailabilityItemServlet extends HttpServlet {
         String password = "";
 
         jdbcUtility = new JDBCUtility(driver,
-                                      url,
-                                      userName,
-                                      password);
+                url,
+                userName,
+                password);
 
         jdbcUtility.jdbcConnect();
-        con = jdbcUtility.jdbcGetConnection(); }
+        con = jdbcUtility.jdbcGetConnection();
+    }
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -63,45 +64,43 @@ public class ViewAvailabilityItemServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-         
-             
-        HttpSession session = request.getSession();
-        
-        User user = (User)session.getAttribute("memberprofile");
-        String userName = user.getUsername();
-        
-        ArrayList bkList = new ArrayList();        
-        
-        String sqlQuery = "select * from item where itemStat = ?";
-        
-        System.out.println(sqlQuery);
-        try {
-            PreparedStatement preparedStatement = con.prepareStatement(sqlQuery);
-            preparedStatement.setString(1,"active");
-            ResultSet rs = preparedStatement.executeQuery();
-            
-            while (rs.next()) {
-                String itemName = rs.getString("itemName");
-                String itemType = rs.getString("itemType");
-                String itemStat = rs.getString("itemStat");
-                Double price = rs.getDouble("price");
-                int itemID = rs.getInt("itemID");
-                
-                Item item = new Item(itemName, itemType, itemStat, itemID, price);
-                bkList.add(item);
+
+            HttpSession session = request.getSession();
+
+            User user = (User) session.getAttribute("memberprofile");
+            String userName = user.getUsername();
+
+            ArrayList bkList = new ArrayList();
+
+            String sqlQuery = "select * from item where itemStat = ?";
+
+            System.out.println(sqlQuery);
+            try {
+                PreparedStatement preparedStatement = con.prepareStatement(sqlQuery);
+                preparedStatement.setString(1, "active");
+                ResultSet rs = preparedStatement.executeQuery();
+
+                while (rs.next()) {
+                    String itemName = rs.getString("itemName");
+                    String itemType = rs.getString("itemType");
+                    String itemStat = rs.getString("itemStat");
+                    Double price = rs.getDouble("price");
+                    int itemID = rs.getInt("itemID");
+
+                    Item item = new Item(itemName, itemType, itemStat, itemID, price);
+                    bkList.add(item);
+                }
+            } catch (SQLException ex) {
+
+                out.println(ex);
             }
+
+            session.setAttribute("bklist", bkList);
+            response.sendRedirect(request.getContextPath() + "/bookitem.jsp");
         }
-        catch (SQLException ex) {   
-            
-            out.println(ex);
-        }
-        
-        session.setAttribute("bklist", bkList);
-        response.sendRedirect(request.getContextPath() + "/bookitem.jsp");        
+
     }
-           
-        
-    }
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

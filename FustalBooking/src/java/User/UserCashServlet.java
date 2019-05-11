@@ -26,17 +26,16 @@ import jdbc.JDBCUtility;
  */
 @WebServlet(name = "UserCashServlet", urlPatterns = {"/UserCashServlet"})
 public class UserCashServlet extends HttpServlet {
-    
+
     private JDBCUtility jdbcUtility;
     private Connection con;
-    
+
     /**
      *
      * @throws ServletException
      */
     @Override
-    public void init() throws ServletException
-    {
+    public void init() throws ServletException {
         String driver = "com.mysql.jdbc.Driver";
 
         String dbName = "futsal";
@@ -45,13 +44,13 @@ public class UserCashServlet extends HttpServlet {
         String password = "";
 
         jdbcUtility = new JDBCUtility(driver,
-                                      url,
-                                      userName,
-                                      password);
+                url,
+                userName,
+                password);
 
         jdbcUtility.jdbcConnect();
         con = jdbcUtility.jdbcGetConnection();
-    }  
+    }
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -66,16 +65,16 @@ public class UserCashServlet extends HttpServlet {
             throws ServletException, IOException {
 
         //get form data from VIEW > V-I
-        String bookingID =request.getParameter("bookingID");
+        String bookingID = request.getParameter("bookingID");
         String fullname = request.getParameter("fullname");
         String cvv = request.getParameter("cvv");
         String cardNo = request.getParameter("cardNo");
         String month = request.getParameter("month");
         String year = request.getParameter("year");
-        
-        String sqlInsert = "INSERT INTO creditcard(fullname, cvv, cardNo, month, year) VALUES(?, ?, ?, ?, ?)"; 
-        String sqlUpdate = "UPDATE booking SET payStatus = 'approve' WHERE bookingID = ?"; 
-        
+
+        String sqlInsert = "INSERT INTO creditcard(fullname, cvv, cardNo, month, year) VALUES(?, ?, ?, ?, ?)";
+        String sqlUpdate = "UPDATE booking SET payStatus = 'approve' WHERE bookingID = ?";
+
         try {
             PreparedStatement preparedStatement = con.prepareStatement(sqlInsert);
             preparedStatement.setString(1, fullname);
@@ -90,14 +89,13 @@ public class UserCashServlet extends HttpServlet {
             updateStatement.executeUpdate();
             //HttpSession session = request.getSession();
             //session.setAttribute("card", card);  
-            
-           response.sendRedirect(request.getContextPath() + "/paymentstatus.jsp");
-        }
-        catch (SQLException ex) {
+
+            response.sendRedirect(request.getContextPath() + "/paymentstatus.jsp");
+        } catch (SQLException ex) {
             ex.printStackTrace();
             PrintWriter out = response.getWriter();
             out.println(ex);
-        }        
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

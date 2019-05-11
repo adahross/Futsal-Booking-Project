@@ -6,30 +6,31 @@
 package Bean;
 
 import java.io.Serializable;
+
 /**
  *
- * 
+ *
  */
-public class Item implements Serializable{
-    
+public class Item implements Serializable {
+
     private String ItemName;
     private String ItemType;
-    private String ItemStat; 
+    private String ItemStat;
     private int ItemID;
     private double price;
-   
-   
-    
+
     //overloading constructor
-    public Item(){
+    public Item() {
     }
-    public Item(String ItemName, String ItemType, String ItemStat, int ItemID, double price){
+
+    public Item(String ItemName, String ItemType, String ItemStat, int ItemID, double price) {
         this.ItemName = ItemName;
         this.ItemType = ItemType;
         this.ItemStat = ItemStat;
         this.ItemID = ItemID;
         this.price = price;
     }
+
     /**
      * @return the ItemID
      */
@@ -99,5 +100,5 @@ public class Item implements Serializable{
     public void setItemName(String ItemName) {
         this.ItemName = ItemName;
     }
-    
+
 }

@@ -32,9 +32,8 @@ public class viewAvailabiltyServlet extends HttpServlet {
 
     private JDBCUtility jdbcUtility;
     private Connection con;
-    
-    public void init() throws ServletException
-    {
+
+    public void init() throws ServletException {
         String driver = "com.mysql.jdbc.Driver";
 
         String dbName = "futsal";
@@ -43,12 +42,14 @@ public class viewAvailabiltyServlet extends HttpServlet {
         String password = "";
 
         jdbcUtility = new JDBCUtility(driver,
-                                      url,
-                                      userName,
-                                      password);
+                url,
+                userName,
+                password);
 
         jdbcUtility.jdbcConnect();
-        con = jdbcUtility.jdbcGetConnection(); }
+        con = jdbcUtility.jdbcGetConnection();
+    }
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -62,44 +63,41 @@ public class viewAvailabiltyServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-         
-             
-        HttpSession session = request.getSession();
-        
-        User user = (User)session.getAttribute("memberprofile");
-        String userName = user.getUsername();
-        
-        ArrayList bkList = new ArrayList();        
-        
-        String sqlQuery = "select * from court where courtStat = ?";
-        
-        System.out.println(sqlQuery);
-        try {
-            PreparedStatement preparedStatement = con.prepareStatement(sqlQuery);
-            preparedStatement.setString(1,"active");
-            ResultSet rs = preparedStatement.executeQuery();
-            
-            while (rs.next()) {
-                String courtName = rs.getString("courtName");
-                String courtType = rs.getString("courtType");
-                String courtStat = rs.getString("courtStat");
-                Double price = rs.getDouble("price");
-                int courtID = rs.getInt("courtID");
-                
-                Court court = new Court(courtName, courtType, courtStat, courtID, price);
-                bkList.add(court);
+
+            HttpSession session = request.getSession();
+
+            User user = (User) session.getAttribute("memberprofile");
+            String userName = user.getUsername();
+
+            ArrayList bkList = new ArrayList();
+
+            String sqlQuery = "select * from court where courtStat = ?";
+
+            System.out.println(sqlQuery);
+            try {
+                PreparedStatement preparedStatement = con.prepareStatement(sqlQuery);
+                preparedStatement.setString(1, "active");
+                ResultSet rs = preparedStatement.executeQuery();
+
+                while (rs.next()) {
+                    String courtName = rs.getString("courtName");
+                    String courtType = rs.getString("courtType");
+                    String courtStat = rs.getString("courtStat");
+                    Double price = rs.getDouble("price");
+                    int courtID = rs.getInt("courtID");
+
+                    Court court = new Court(courtName, courtType, courtStat, courtID, price);
+                    bkList.add(court);
+                }
+            } catch (SQLException ex) {
+
+                out.println(ex);
             }
+
+            session.setAttribute("bklist", bkList);
+            response.sendRedirect(request.getContextPath() + "/bookcourt.jsp");
         }
-        catch (SQLException ex) {   
-            
-            out.println(ex);
-        }
-        
-        session.setAttribute("bklist", bkList);
-        response.sendRedirect(request.getContextPath() + "/bookcourt.jsp");        
-    }
-           
-        
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

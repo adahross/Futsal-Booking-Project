@@ -31,12 +31,10 @@ import jdbc.JDBCUtility;
 @WebServlet(name = "HistoryBookingServlet", urlPatterns = {"/HistoryBookingServlet"})
 public class HistoryBookingServlet extends HttpServlet {
 
-   
     private JDBCUtility jdbcUtility;
     private Connection con;
-    
-    public void init() throws ServletException
-    {
+
+    public void init() throws ServletException {
         String driver = "com.mysql.jdbc.Driver";
 
         String dbName = "futsal";
@@ -45,13 +43,14 @@ public class HistoryBookingServlet extends HttpServlet {
         String password = "";
 
         jdbcUtility = new JDBCUtility(driver,
-                                      url,
-                                      userName,
-                                      password);
+                url,
+                userName,
+                password);
 
         jdbcUtility.jdbcConnect();
-        con = jdbcUtility.jdbcGetConnection(); 
+        con = jdbcUtility.jdbcGetConnection();
     }
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -66,62 +65,59 @@ public class HistoryBookingServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-          HttpSession session = request.getSession();
-        
-        User user = (User)session.getAttribute("memberprofile");
-        String username = user.getUsername();
-        
-        ArrayList rqCourtList = new ArrayList();        
-        
-        String sqlQuery = "SELECT * FROM booking join court on booking.courtID = court.courtID WHERE username = ? ORDER BY bookingID ASC ";
-        System.out.println(sqlQuery);
-        try {
-            
-            
-            PreparedStatement preparedStatement = con.prepareStatement(sqlQuery);
-            preparedStatement.setString(1, username);
-            ResultSet rs = preparedStatement.executeQuery();
-            
-            while (rs.next()) {
-                String courtName = rs.getString("courtName");
-                String courtType = rs.getString("courtType");
-                String bookingStat = rs.getString("bookingStat");
-                String payStatus = rs.getString("payStatus");
-                double price = rs.getDouble("price");
-                int bookingID = rs.getInt("bookingID");
-                String bookdate = rs.getString("book_date");
- //yyyy-MM-dd
-                
-                
-                //convert traveldate string to date (still mysql date)
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-                Date date = new Date();
-                try {
-                   date = formatter.parse(bookdate);
-                } catch (Exception ex) {}
-                
-                //convert mysql date to MY date
-                formatter = new SimpleDateFormat("dd-MM-yyyy");
-                bookdate = formatter.format(date); 
-                
-                
-                Booking bk = new Booking();
-                bk.setCourtName(courtName);
-                bk.setCourtType(courtType);
-                bk.setBookingStat(bookingStat);
-                bk.setPayStatus(payStatus);
-                bk.setPrice(price);
-                bk.setBookingID(bookingID);
-                bk.setBookDate(bookdate);
-                rqCourtList.add(bk);
+            HttpSession session = request.getSession();
+
+            User user = (User) session.getAttribute("memberprofile");
+            String username = user.getUsername();
+
+            ArrayList rqCourtList = new ArrayList();
+
+            String sqlQuery = "SELECT * FROM booking join court on booking.courtID = court.courtID WHERE username = ? ORDER BY bookingID ASC ";
+            System.out.println(sqlQuery);
+            try {
+
+                PreparedStatement preparedStatement = con.prepareStatement(sqlQuery);
+                preparedStatement.setString(1, username);
+                ResultSet rs = preparedStatement.executeQuery();
+
+                while (rs.next()) {
+                    String courtName = rs.getString("courtName");
+                    String courtType = rs.getString("courtType");
+                    String bookingStat = rs.getString("bookingStat");
+                    String payStatus = rs.getString("payStatus");
+                    double price = rs.getDouble("price");
+                    int bookingID = rs.getInt("bookingID");
+                    String bookdate = rs.getString("book_date");
+                    //yyyy-MM-dd
+
+                    //convert traveldate string to date (still mysql date)
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                    Date date = new Date();
+                    try {
+                        date = formatter.parse(bookdate);
+                    } catch (Exception ex) {
+                    }
+
+                    //convert mysql date to MY date
+                    formatter = new SimpleDateFormat("dd-MM-yyyy");
+                    bookdate = formatter.format(date);
+
+                    Booking bk = new Booking();
+                    bk.setCourtName(courtName);
+                    bk.setCourtType(courtType);
+                    bk.setBookingStat(bookingStat);
+                    bk.setPayStatus(payStatus);
+                    bk.setPrice(price);
+                    bk.setBookingID(bookingID);
+                    bk.setBookDate(bookdate);
+                    rqCourtList.add(bk);
+                }
+            } catch (SQLException ex) {
+                out.println(ex);
             }
-        }
-        catch (SQLException ex) { 
-            out.println(ex);
-        }
-        
-        session.setAttribute("rqcourtlist", rqCourtList);
-        response.sendRedirect(request.getContextPath() + "/bookingHistory.jsp");        
+
+            session.setAttribute("rqcourtlist", rqCourtList);
+            response.sendRedirect(request.getContextPath() + "/bookingHistory.jsp");
         }
     }
 

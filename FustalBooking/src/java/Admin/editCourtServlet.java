@@ -29,9 +29,8 @@ public class editCourtServlet extends HttpServlet {
 
     private JDBCUtility jdbcUtility;
     private Connection con;
-    
-    public void init() throws ServletException
-    {
+
+    public void init() throws ServletException {
         String driver = "com.mysql.jdbc.Driver";
 
         String dbName = "futsal";
@@ -40,13 +39,14 @@ public class editCourtServlet extends HttpServlet {
         String password = "";
 
         jdbcUtility = new JDBCUtility(driver,
-                                      url,
-                                      userName,
-                                      password);
+                url,
+                userName,
+                password);
 
         jdbcUtility.jdbcConnect();
         con = jdbcUtility.jdbcGetConnection();
-    } 
+    }
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -61,42 +61,41 @@ public class editCourtServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            
-        HttpSession session = request.getSession();
-        int courtID = Integer.parseInt(request.getParameter("courtID"));
 
-        String sqlQuery = "SELECT * FROM court WHERE courtID = ?"; 
-   
-        Court court = new Court();
-        try {
-            PreparedStatement preparedStatement = con.prepareStatement(sqlQuery);
-            preparedStatement.setInt(1, courtID);
-            ResultSet rs = preparedStatement.executeQuery();
-     
-            while (rs.next()) {
-                
-                String courtName = rs.getString("courtName");
-                String courtType = rs.getString("courtType");
-                //String courtStat = rs.getString("courtStat");
-                double price = rs.getDouble("price");
-                courtID = rs.getInt("courtID");
-                
-                court.setCourtName(courtName);
-                court.setCourtType(courtType);
-                //court.setCourtStat(courtStat);
-                court.setPrice(price);
-                court.setCourtID(courtID);
-                
-                out.println(courtName);
-                out.println(courtType);
+            HttpSession session = request.getSession();
+            int courtID = Integer.parseInt(request.getParameter("courtID"));
+
+            String sqlQuery = "SELECT * FROM court WHERE courtID = ?";
+
+            Court court = new Court();
+            try {
+                PreparedStatement preparedStatement = con.prepareStatement(sqlQuery);
+                preparedStatement.setInt(1, courtID);
+                ResultSet rs = preparedStatement.executeQuery();
+
+                while (rs.next()) {
+
+                    String courtName = rs.getString("courtName");
+                    String courtType = rs.getString("courtType");
+                    //String courtStat = rs.getString("courtStat");
+                    double price = rs.getDouble("price");
+                    courtID = rs.getInt("courtID");
+
+                    court.setCourtName(courtName);
+                    court.setCourtType(courtType);
+                    //court.setCourtStat(courtStat);
+                    court.setPrice(price);
+                    court.setCourtID(courtID);
+
+                    out.println(courtName);
+                    out.println(courtType);
+                }
+            } catch (SQLException ex) {
+                out.println(ex);
             }
-        }
-        catch (SQLException ex) {  
-            out.println(ex);
-        }
-        
-        session.setAttribute("court", court);
-        response.sendRedirect(request.getContextPath() + "/editcourt.jsp");  
+
+            session.setAttribute("court", court);
+            response.sendRedirect(request.getContextPath() + "/editcourt.jsp");
         }
     }
 

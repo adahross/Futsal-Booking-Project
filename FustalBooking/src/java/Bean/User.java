@@ -6,14 +6,15 @@
 package Bean;
 
 import java.io.Serializable;
+
 /**
  *
  * @author User
  */
-public class User implements Serializable{
+public class User implements Serializable {
 
-    private String username, email, password,fullname,phoneNo;
-    private int usertype,bookingID;
+    private String username, email, password, fullname, phoneNo;
+    private int usertype, bookingID;
 
     /**
      * @return the username
@@ -116,8 +117,4 @@ public class User implements Serializable{
     /**
      * @return the bookingId
      */
-
-
-
-
 }

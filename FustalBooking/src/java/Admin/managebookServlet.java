@@ -30,9 +30,8 @@ public class managebookServlet extends HttpServlet {
 
     private JDBCUtility jdbcUtility;
     private Connection con;
-    
-    public void init() throws ServletException
-    {
+
+    public void init() throws ServletException {
         String driver = "com.mysql.jdbc.Driver";
 
         String dbName = "futsal";
@@ -41,13 +40,14 @@ public class managebookServlet extends HttpServlet {
         String password = "";
 
         jdbcUtility = new JDBCUtility(driver,
-                                      url,
-                                      userName,
-                                      password);
+                url,
+                userName,
+                password);
 
         jdbcUtility.jdbcConnect();
         con = jdbcUtility.jdbcGetConnection();
     }
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -62,41 +62,39 @@ public class managebookServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-          
-        HttpSession session = request.getSession();
-        
-        ArrayList courtList = new ArrayList();        
-        
-        String sqlQuery = "SELECT * FROM court ORDER BY courtName ASC";        
-        try {
-            PreparedStatement preparedStatement = con.prepareStatement(sqlQuery);
-            ResultSet rs = preparedStatement.executeQuery();
-            
-            while (rs.next()) {
-                String courtName = rs.getString("courtName");
-                int courtID = rs.getInt("courtID");
-                String courtType = rs.getString("courtType");
-                String courtStat = rs.getString("courtStat");
-                
-                double price = Double.parseDouble(rs.getString("price"));
-                
-                
-                Court court = new Court();
-                court.setCourtID(courtID);
-                court.setCourtName(courtName);
-                court.setCourtType(courtType);
-                court.setCourtStat(courtStat);
-                court.setPrice(price);
-            
-                courtList.add(court);
+
+            HttpSession session = request.getSession();
+
+            ArrayList courtList = new ArrayList();
+
+            String sqlQuery = "SELECT * FROM court ORDER BY courtName ASC";
+            try {
+                PreparedStatement preparedStatement = con.prepareStatement(sqlQuery);
+                ResultSet rs = preparedStatement.executeQuery();
+
+                while (rs.next()) {
+                    String courtName = rs.getString("courtName");
+                    int courtID = rs.getInt("courtID");
+                    String courtType = rs.getString("courtType");
+                    String courtStat = rs.getString("courtStat");
+
+                    double price = Double.parseDouble(rs.getString("price"));
+
+                    Court court = new Court();
+                    court.setCourtID(courtID);
+                    court.setCourtName(courtName);
+                    court.setCourtType(courtType);
+                    court.setCourtStat(courtStat);
+                    court.setPrice(price);
+
+                    courtList.add(court);
+                }
+            } catch (SQLException ex) {
+                out.println(ex);
             }
-        }
-        catch (SQLException ex) { 
-            out.println(ex);
-        }
-        
-        session.setAttribute("courtlist", courtList);
-        response.sendRedirect(request.getContextPath() + "/managecourt.jsp");
+
+            session.setAttribute("courtlist", courtList);
+            response.sendRedirect(request.getContextPath() + "/managecourt.jsp");
         }
     }
 

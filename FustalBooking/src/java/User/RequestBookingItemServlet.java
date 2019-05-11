@@ -30,11 +30,10 @@ import jdbc.JDBCUtility;
 @WebServlet(name = "RequestBookingItemServlet", urlPatterns = {"/RequestBookingItemServlet"})
 public class RequestBookingItemServlet extends HttpServlet {
 
-      private JDBCUtility jdbcUtility;
+    private JDBCUtility jdbcUtility;
     private Connection con;
-    
-    public void init() throws ServletException
-    {
+
+    public void init() throws ServletException {
         String driver = "com.mysql.jdbc.Driver";
 
         String dbName = "futsal";
@@ -43,12 +42,13 @@ public class RequestBookingItemServlet extends HttpServlet {
         String password = "";
 
         jdbcUtility = new JDBCUtility(driver,
-                                      url,
-                                      userName,
-                                      password);
+                url,
+                userName,
+                password);
 
         jdbcUtility.jdbcConnect();
-        con = jdbcUtility.jdbcGetConnection(); }
+        con = jdbcUtility.jdbcGetConnection();
+    }
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -63,84 +63,87 @@ public class RequestBookingItemServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
+
+            //get user from session
             HttpSession session = request.getSession();
-            User user = (User)session.getAttribute("memberprofile"); 
+            User user = (User) session.getAttribute("memberprofile");
+
+            //Retrieve data using POST method
+            //Store into local variable
             int itemID = Integer.parseInt(request.getParameter("itemID"));
             String itemType = request.getParameter("itemType");
             String itemName = request.getParameter("itemName");
             String book_date = request.getParameter("bookdate");
             out.println(book_date);
-        
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-        Date date = new Date();
-        try {
-            
-            date = formatter.parse(book_date);
-        } catch (Exception ex) {            
-        }
-        
-        //convert to mysql date
-        formatter = new SimpleDateFormat("yyyy-MM-dd");
-        book_date = formatter.format(date);        
-        
-                   
-           
+
+            //convert string to Date format
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+            Date date = new Date();
+            try {
+
+                date = formatter.parse(book_date);
+            }
+            catch (Exception ex) {
+            }
+
+            //convert to mysql date
+            formatter = new SimpleDateFormat("yyyy-MM-dd");
+            book_date = formatter.format(date);
+
             String username = user.getUsername();
             String sqlInsert = "INSERT INTO bookingitem(itemName, itemType, bookingStat, itemID, username, payStatus, book_date) VALUES(?, ?, 'pending', ?, ?, 'pending',?)";
-            
-              try {
-                  
-            PreparedStatement preparedStatement = con.prepareStatement(sqlInsert);
-            
-            preparedStatement.setString(1, itemName);
-            preparedStatement.setString(2, itemType);
-            preparedStatement.setInt(3, itemID);
-            preparedStatement.setString(4, username);
-            preparedStatement.setString(5, book_date);
-            preparedStatement.executeUpdate();
-            
-            //get price using itemID
-            String sqlQuery = "SELECT * FROM bookingitem";            
-            preparedStatement = con.prepareStatement(sqlQuery);
-            ResultSet rs = preparedStatement.executeQuery();
-            Booking br = new Booking();
-            while (rs.next()) {
-            
-            int item_ID=rs.getInt("itemID");
-            String cName = rs.getString("itemName");
-            String cType = rs.getString("itemType");
-            int bookID = rs.getInt("bookingID"); 
-            String bookingStat = rs.getString("bookingStat");
-            String payStatus = rs.getString("payStatus");
-            String bookdate = rs.getString("book_date");
-            String uname = rs.getString("username"); 
-            
-            br.setItemID(item_ID);               
-            br.setUsername(uname);
-            br.setBookDate(bookdate);
-            br.setItemType(cType);
-            br.setBookingStat(bookingStat);
-            br.setPayStatus(payStatus);   
-            br.setBookingID(bookID);
-            br.setItemName(cName);
 
+            try {
+
+                PreparedStatement preparedStatement = con.prepareStatement(sqlInsert);
+
+                preparedStatement.setString(1, itemName);
+                preparedStatement.setString(2, itemType);
+                preparedStatement.setInt(3, itemID);
+                preparedStatement.setString(4, username);
+                preparedStatement.setString(5, book_date);
+                preparedStatement.executeUpdate();
+
+                //get price using itemID
+                String sqlQuery = "SELECT * FROM bookingitem";
+                preparedStatement = con.prepareStatement(sqlQuery);
+                ResultSet rs = preparedStatement.executeQuery();
+                Booking br = new Booking();
+                while (rs.next()) {
+
+                    int item_ID = rs.getInt("itemID");
+                    String cName = rs.getString("itemName");
+                    String cType = rs.getString("itemType");
+                    int bookID = rs.getInt("bookingID");
+                    String bookingStat = rs.getString("bookingStat");
+                    String payStatus = rs.getString("payStatus");
+                    String bookdate = rs.getString("book_date");
+                    String uname = rs.getString("username");
+
+                    br.setItemID(item_ID);
+                    br.setUsername(uname);
+                    br.setBookDate(bookdate);
+                    br.setItemType(cType);
+                    br.setBookingStat(bookingStat);
+                    br.setPayStatus(payStatus);
+                    br.setBookingID(bookID);
+                    br.setItemName(cName);
+
+                }
+
+                session.setAttribute("newly", br);
+
+                response.sendRedirect(request.getContextPath() + "/requestitemstatus.jsp");
+            } catch (SQLException ex) {
+
+                out.println(ex);
+                ex.printStackTrace();
             }
-           
-            
-           
-            session.setAttribute("newly", br);  
-                      
-           response.sendRedirect(request.getContextPath() + "/requestitemstatus.jsp");
+
         }
-        catch (SQLException ex) {
-            
-            out.println(ex);
-            ex.printStackTrace();
-        } 
-            
-        }
-    
-}
+
+    }
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

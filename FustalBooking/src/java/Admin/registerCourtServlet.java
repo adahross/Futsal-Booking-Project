@@ -30,9 +30,8 @@ public class registerCourtServlet extends HttpServlet {
 
     private JDBCUtility jdbcUtility;
     private Connection con;
-    
-    public void init() throws ServletException
-    {
+
+    public void init() throws ServletException {
         String driver = "com.mysql.jdbc.Driver";
 
         String dbName = "futsal";
@@ -41,13 +40,14 @@ public class registerCourtServlet extends HttpServlet {
         String password = "";
 
         jdbcUtility = new JDBCUtility(driver,
-                                      url,
-                                      userName,
-                                      password);
+                url,
+                userName,
+                password);
 
         jdbcUtility.jdbcConnect();
         con = jdbcUtility.jdbcGetConnection();
     }
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -61,40 +61,35 @@ public class registerCourtServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-         
-            
-        //Get the session object
-	HttpSession session = request.getSession();
-        
-        ArrayList courtList = new ArrayList();  
-        
-        //get form data from VIEW > V-I
-        String courtName = request.getParameter("courtName");
-        String courtType = request.getParameter("courtType");
-        double price =  Double.parseDouble(request.getParameter("price"));
-        
-        String sqlInsert = "INSERT INTO court (courtName, courtType, price, courtStat) VALUES(?, ?, ?, 'active')"; 
-        
-        try {
-            PreparedStatement preparedStatement = con.prepareStatement(sqlInsert);
-            preparedStatement.setString(1, courtName);
-            preparedStatement.setString(2, courtType);
-            preparedStatement.setDouble(3, price);
-            preparedStatement.executeUpdate();
-            
-            
-            
-        }
-        catch (SQLException ex) { 
-           
-            out.println(ex);
-        }
-        
-        //session.setAttribute("courtlist", courtList);
-        response.sendRedirect(request.getContextPath() + "/viewCourtServlet");
-    }
 
-        
+            //Get the session object
+            HttpSession session = request.getSession();
+
+            ArrayList courtList = new ArrayList();
+
+            //get form data from VIEW > V-I
+            String courtName = request.getParameter("courtName");
+            String courtType = request.getParameter("courtType");
+            double price = Double.parseDouble(request.getParameter("price"));
+
+            String sqlInsert = "INSERT INTO court (courtName, courtType, price, courtStat) VALUES(?, ?, ?, 'active')";
+
+            try {
+                PreparedStatement preparedStatement = con.prepareStatement(sqlInsert);
+                preparedStatement.setString(1, courtName);
+                preparedStatement.setString(2, courtType);
+                preparedStatement.setDouble(3, price);
+                preparedStatement.executeUpdate();
+
+            } catch (SQLException ex) {
+
+                out.println(ex);
+            }
+
+            //session.setAttribute("courtlist", courtList);
+            response.sendRedirect(request.getContextPath() + "/viewCourtServlet");
+        }
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

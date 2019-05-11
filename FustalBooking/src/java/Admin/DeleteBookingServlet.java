@@ -21,17 +21,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import jdbc.JDBCUtility;
+
 /**
  *
  * @author USER
  */
 @WebServlet(name = "DeleteBookingServlet", urlPatterns = {"/DeleteBookingServlet"})
 public class DeleteBookingServlet extends HttpServlet {
-   private JDBCUtility jdbcUtility;
+
+    private JDBCUtility jdbcUtility;
     private Connection con;
-    
-    public void init() throws ServletException
-    {
+
+    public void init() throws ServletException {
         String driver = "com.mysql.jdbc.Driver";
 
         String dbName = "futsal";
@@ -40,13 +41,14 @@ public class DeleteBookingServlet extends HttpServlet {
         String password = "";
 
         jdbcUtility = new JDBCUtility(driver,
-                                      url,
-                                      userName,
-                                      password);
+                url,
+                userName,
+                password);
 
         jdbcUtility.jdbcConnect();
         con = jdbcUtility.jdbcGetConnection();
     }
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -57,59 +59,55 @@ public class DeleteBookingServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-           HttpSession session = request.getSession();
-        
-        ArrayList bkList = new ArrayList();       
-        //get form data from VIEW > V-I
-        int bookID = Integer.parseInt(request.getParameter("bookID"));
-        
-        
-        String sqlUpdate = "Delete from booking WHERE bookingID = ?"; 
-        
-        try {
-            PreparedStatement preparedStatement = con.prepareStatement(sqlUpdate);
-            preparedStatement.setInt(1, bookID);
-            preparedStatement.executeUpdate();
-            
-            
-        
-        String sqlQuery = "SELECT booking.username, booking.bookingID, booking.bookingStat, booking.book_date,court.courtType, court.courtName" +
-                          " FROM booking, court" +
-                          " WHERE booking.courtID = court.courtID" +
-                          " ORDER BY  bookingID ASC";
-        
-        preparedStatement = con.prepareStatement(sqlQuery);
-        ResultSet rs = preparedStatement.executeQuery();
-            
-            while (rs.next()) {
-                int bookingID = Integer.parseInt(rs.getString("bookingID"));
-                String bookingStat = rs.getString("bookingStat");
-                String username = rs.getString("username");
-                String courtType = rs.getString("courtType");  
-                String courtName = rs.getString("courtName");
-                String bookingDate = rs.getString("book_date");
-                                
-                Booking bk = new Booking();
-                bk.setBookingID(bookingID);
-                bk.setBookingStat(bookingStat);
-                bk.setUsername(username);
-                bk.setCourtType(courtType);
-                bk.setCourtName(courtName);
-                bk.setBookDate(bookingDate);
-                System.out.println(bk.getBookingID());
-                bkList.add(bk);
+            HttpSession session = request.getSession();
+
+            ArrayList bkList = new ArrayList();
+            //get form data from VIEW > V-I
+            int bookID = Integer.parseInt(request.getParameter("bookID"));
+
+            String sqlUpdate = "Delete from booking WHERE bookingID = ?";
+
+            try {
+                PreparedStatement preparedStatement = con.prepareStatement(sqlUpdate);
+                preparedStatement.setInt(1, bookID);
+                preparedStatement.executeUpdate();
+
+                String sqlQuery = "SELECT booking.username, booking.bookingID, booking.bookingStat, booking.book_date,court.courtType, court.courtName"
+                        + " FROM booking, court"
+                        + " WHERE booking.courtID = court.courtID"
+                        + " ORDER BY  bookingID ASC";
+
+                preparedStatement = con.prepareStatement(sqlQuery);
+                ResultSet rs = preparedStatement.executeQuery();
+
+                while (rs.next()) {
+                    int bookingID = Integer.parseInt(rs.getString("bookingID"));
+                    String bookingStat = rs.getString("bookingStat");
+                    String username = rs.getString("username");
+                    String courtType = rs.getString("courtType");
+                    String courtName = rs.getString("courtName");
+                    String bookingDate = rs.getString("book_date");
+
+                    Booking bk = new Booking();
+                    bk.setBookingID(bookingID);
+                    bk.setBookingStat(bookingStat);
+                    bk.setUsername(username);
+                    bk.setCourtType(courtType);
+                    bk.setCourtName(courtName);
+                    bk.setBookDate(bookingDate);
+                    System.out.println(bk.getBookingID());
+                    bkList.add(bk);
+                }
+
+            } catch (SQLException ex) {
+                out.println(ex);
             }
-        
-        }
-        catch (SQLException ex) { 
-            out.println(ex);
-        }
-        
-       session.setAttribute("mainbooking", bkList);
-        response.sendRedirect(request.getContextPath() + "/mainbooking.jsp");
+
+            session.setAttribute("mainbooking", bkList);
+            response.sendRedirect(request.getContextPath() + "/mainbooking.jsp");
         }
     }
 

@@ -26,13 +26,11 @@ import jdbc.JDBCUtility;
  */
 @WebServlet(name = "bookingApprovalServlet", urlPatterns = {"/bookingApprovalServlet"})
 public class bookingApprovalServlet extends HttpServlet {
-    
-    
+
     private JDBCUtility jdbcUtility;
     private Connection con;
-    
-    public void init() throws ServletException
-    {
+
+    public void init() throws ServletException {
         String driver = "com.mysql.jdbc.Driver";
 
         String dbName = "futsal";
@@ -41,13 +39,13 @@ public class bookingApprovalServlet extends HttpServlet {
         String password = "";
 
         jdbcUtility = new JDBCUtility(driver,
-                                      url,
-                                      userName,
-                                      password);
+                url,
+                userName,
+                password);
 
         jdbcUtility.jdbcConnect();
         con = jdbcUtility.jdbcGetConnection();
-    }    
+    }
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -60,44 +58,40 @@ public class bookingApprovalServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-       
+
         //Get the session object
-	HttpSession session = request.getSession();
-        
-        ArrayList bookList = new ArrayList();  
-        
+        HttpSession session = request.getSession();
+
+        ArrayList bookList = new ArrayList();
+
         //get form data from VIEW > V-I
         int bookingID = Integer.parseInt(request.getParameter("bookingID"));
         String bookingStat = request.getParameter("bookingStat");
-        
-        if (bookingStat.equals("Yes")) {    
-            String sqlUpdate = "UPDATE booking SET bookingStat = 'approve' WHERE bookingID = ?";         
-        
+
+        if (bookingStat.equals("Yes")) {
+            String sqlUpdate = "UPDATE booking SET bookingStat = 'approve' WHERE bookingID = ?";
+
             try {
                 PreparedStatement preparedStatement = con.prepareStatement(sqlUpdate);
                 preparedStatement.setInt(1, bookingID);
                 preparedStatement.executeUpdate();
-            }
-            catch (SQLException ex) {    
+            } catch (SQLException ex) {
                 PrintWriter out = response.getWriter();
-                out.println(ex);              
+                out.println(ex);
             }
-        } 
-        else 
-        {    
-            String sqlUpdate = "UPDATE booking SET bookingStat = 'rejected' WHERE bookingID = ?";         
-        
+        } else {
+            String sqlUpdate = "UPDATE booking SET bookingStat = 'rejected' WHERE bookingID = ?";
+
             try {
                 PreparedStatement preparedStatement = con.prepareStatement(sqlUpdate);
                 preparedStatement.setInt(1, bookingID);
                 preparedStatement.executeUpdate();
-            }
-            catch (SQLException ex) {
+            } catch (SQLException ex) {
                 PrintWriter out = response.getWriter();
                 out.println(ex);
             }
         }
-        
+
         session.setAttribute("booklist", bookList);
         response.sendRedirect(request.getContextPath() + "/MainBookingServlet");
     }

@@ -5,7 +5,6 @@
  */
 package User;
 
-
 import Bean.User;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -27,12 +26,10 @@ import jdbc.JDBCUtility;
 @WebServlet(name = "RegisterUserServlet", urlPatterns = {"/RegisterUserServlet"})
 public class RegisterUserServlet extends HttpServlet {
 
-    
     private JDBCUtility jdbcUtility;
     private Connection con;
-    
-    public void init() throws ServletException
-    {
+
+    public void init() throws ServletException {
         String driver = "com.mysql.jdbc.Driver";
 
         String dbName = "futsal";
@@ -41,13 +38,14 @@ public class RegisterUserServlet extends HttpServlet {
         String password = "";
 
         jdbcUtility = new JDBCUtility(driver,
-                                      url,
-                                      userName,
-                                      password);
+                url,
+                userName,
+                password);
 
         jdbcUtility.jdbcConnect();
         con = jdbcUtility.jdbcGetConnection();
-    } 
+    }
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -67,14 +65,12 @@ public class RegisterUserServlet extends HttpServlet {
         String fullname = request.getParameter("fullname");
         String phoneNo = request.getParameter("phoneNo");
         int usertype = 0;
-        
+
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            
-            
-            
+
             String sqlInsert = "INSERT INTO user(fullname, username, phoneNo, email, password, usertype) VALUES(?, ?, ?, ?, ?, ?)";
-            
+
             try {
                 PreparedStatement preparedStatement = con.prepareStatement(sqlInsert);
                 preparedStatement.setString(1, fullname);
@@ -91,20 +87,13 @@ public class RegisterUserServlet extends HttpServlet {
                 user.setEmail(email);
                 user.setPassword(password);
                 user.setUsertype(usertype);*/
-
-
-
                 //sendPage(request, response, "/regsuccess.jsp");
-
                 //Get the session object
                 //sendRedirect doesn't recognise request object
                 //only session
-
-
                 response.sendRedirect(request.getContextPath() + "/Signin.jsp");
-            }
-            catch (SQLException ex) {
-                out.println(ex );
+            } catch (SQLException ex) {
+                out.println(ex);
             }
         }
     }

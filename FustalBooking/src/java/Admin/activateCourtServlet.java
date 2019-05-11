@@ -30,13 +30,12 @@ public class activateCourtServlet extends HttpServlet {
 
     private JDBCUtility jdbcUtility;
     private Connection con;
-    
+
     /**
      *
      * @throws ServletException
      */
-    public void init() throws ServletException
-    {
+    public void init() throws ServletException {
         String driver = "com.mysql.jdbc.Driver";
 
         String dbName = "futsal";
@@ -45,13 +44,13 @@ public class activateCourtServlet extends HttpServlet {
         String password = "";
 
         jdbcUtility = new JDBCUtility(driver,
-                                      url,
-                                      userName,
-                                      password);
+                url,
+                userName,
+                password);
 
         jdbcUtility.jdbcConnect();
         con = jdbcUtility.jdbcGetConnection();
-    }        
+    }
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -67,49 +66,47 @@ public class activateCourtServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-             //Get the session object
-	HttpSession session = request.getSession();
-        
-        ArrayList courtList = new ArrayList();  
-        
-        //get form data from VIEW > V-I
-        int courtID = Integer.parseInt(request.getParameter("courtID"));
-        
-        
-        String sqlUpdate = "UPDATE court SET courtStat = 'active' WHERE courtID = ?"; 
-        
-        try {
-            PreparedStatement preparedStatement = con.prepareStatement(sqlUpdate);
-            preparedStatement.setInt(1, courtID);
-            preparedStatement.executeUpdate();
-            
-            String sqlQuery = "SELECT * FROM court ORDER BY courtName ASC";
-            
-            preparedStatement = con.prepareStatement(sqlQuery);
-            ResultSet rs = preparedStatement.executeQuery();
-            
-            while (rs.next()) {
-                String courtName = rs.getString("courtName");
-                String courtType = rs.getString("courtType");
-                String courtStat = rs.getString("courtStat");
-                courtID = rs.getInt("courtID");
-                double price = rs.getDouble("price");
-                
-                Court court = new Court();
-                court.setCourtName(courtName);
-                court.setCourtType(courtType);
-                court.setCourtStat(courtStat);
-                court.setCourtID(courtID);
-                court.setPrice(price);
-                courtList.add(court);
+            //Get the session object
+            HttpSession session = request.getSession();
+
+            ArrayList courtList = new ArrayList();
+
+            //get form data from VIEW > V-I
+            int courtID = Integer.parseInt(request.getParameter("courtID"));
+
+            String sqlUpdate = "UPDATE court SET courtStat = 'active' WHERE courtID = ?";
+
+            try {
+                PreparedStatement preparedStatement = con.prepareStatement(sqlUpdate);
+                preparedStatement.setInt(1, courtID);
+                preparedStatement.executeUpdate();
+
+                String sqlQuery = "SELECT * FROM court ORDER BY courtName ASC";
+
+                preparedStatement = con.prepareStatement(sqlQuery);
+                ResultSet rs = preparedStatement.executeQuery();
+
+                while (rs.next()) {
+                    String courtName = rs.getString("courtName");
+                    String courtType = rs.getString("courtType");
+                    String courtStat = rs.getString("courtStat");
+                    courtID = rs.getInt("courtID");
+                    double price = rs.getDouble("price");
+
+                    Court court = new Court();
+                    court.setCourtName(courtName);
+                    court.setCourtType(courtType);
+                    court.setCourtStat(courtStat);
+                    court.setCourtID(courtID);
+                    court.setPrice(price);
+                    courtList.add(court);
+                }
+            } catch (SQLException ex) {
+                out.println(ex);
             }
-        }
-        catch (SQLException ex) { 
-            out.println(ex);
-        }
-        
-        session.setAttribute("courtlist", courtList);
-        response.sendRedirect(request.getContextPath() + "/managecourt.jsp");
+
+            session.setAttribute("courtlist", courtList);
+            response.sendRedirect(request.getContextPath() + "/managecourt.jsp");
         }
     }
 

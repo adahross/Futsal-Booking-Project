@@ -27,12 +27,11 @@ import jdbc.JDBCUtility;
  */
 @WebServlet(name = "courtUpdateServlet", urlPatterns = {"/courtUpdateServlet"})
 public class courtUpdateServlet extends HttpServlet {
-    
+
     private JDBCUtility jdbcUtility;
     private Connection con;
-    
-    public void init() throws ServletException
-    {
+
+    public void init() throws ServletException {
         String driver = "com.mysql.jdbc.Driver";
 
         String dbName = "futsal";
@@ -41,13 +40,13 @@ public class courtUpdateServlet extends HttpServlet {
         String password = "";
 
         jdbcUtility = new JDBCUtility(driver,
-                                      url,
-                                      userName,
-                                      password);
+                url,
+                userName,
+                password);
 
         jdbcUtility.jdbcConnect();
         con = jdbcUtility.jdbcGetConnection();
-    } 
+    }
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -62,21 +61,21 @@ public class courtUpdateServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-            /* TODO output your page here. You may use following sample code. */
-            //Get the session object
-	
+        /* TODO output your page here. You may use following sample code. */
+        //Get the session object
+
         HttpSession session = request.getSession();
-        
+
         ArrayList courtList = new ArrayList();
-        
+
         //get form data from VIEW > V-I        
         String courtName = request.getParameter("courtName");
         String courtType = request.getParameter("courtType");
         String price = request.getParameter("price");
         String courtID = request.getParameter("courtID");
-        
-        String sqlUpdate = "UPDATE court SET courtName= ?, courtType= ?, price= ? WHERE courtID = ?"; 
-        
+
+        String sqlUpdate = "UPDATE court SET courtName= ?, courtType= ?, price= ? WHERE courtID = ?";
+
         try {
             PreparedStatement preparedStatement = con.prepareStatement(sqlUpdate);
             preparedStatement.setString(1, courtName);
@@ -84,42 +83,39 @@ public class courtUpdateServlet extends HttpServlet {
             preparedStatement.setString(3, price);
             preparedStatement.setString(4, courtID);
             preparedStatement.executeUpdate();
-            
-           
+
             String sqlQuery = "SELECT * FROM court ORDER BY courtName ASC";
-            
+
             preparedStatement = con.prepareStatement(sqlQuery);
             ResultSet rs = preparedStatement.executeQuery();
-            
+
             while (rs.next()) {
                 courtName = rs.getString("courtName");
                 courtType = rs.getString("courtType");
                 //String courtStat = rs.getString("courtStat");
                 double price1 = rs.getDouble("price");
                 int courtID1 = rs.getInt("courtID");
-                
+
                 Court court = new Court();
                 court.setCourtName(courtName);
                 court.setCourtType(courtType);
-               // court.setCourtStat(courtStat); 
-                court.setPrice(price1);  
+                // court.setCourtStat(courtStat); 
+                court.setPrice(price1);
                 court.setCourtID(courtID1);
                 courtList.add(court);
             }
-            
-             out.println(courtName);
-             out.println(courtType);
-             out.println(price);
-           
-             }
-        catch (Exception ex) {       
+
+            out.println(courtName);
+            out.println(courtType);
+            out.println(price);
+
+        } catch (Exception ex) {
             out.println(ex);
         }
 
-         session.setAttribute("courtlist", courtList);
-        response.sendRedirect(request.getContextPath() + "/viewCourtServlet");  
- 
-        
+        session.setAttribute("courtlist", courtList);
+        response.sendRedirect(request.getContextPath() + "/viewCourtServlet");
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

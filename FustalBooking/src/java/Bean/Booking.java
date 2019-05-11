@@ -6,17 +6,16 @@
 package Bean;
 
 import java.io.Serializable;
+
 /**
  *
  * @author User
  */
-public class Booking implements Serializable{
+public class Booking implements Serializable {
 
     /**
      * @return the bookDate
      */
-
-    
     private int bookingID;
     private String username;
     private String bookingStat;
@@ -29,8 +28,7 @@ public class Booking implements Serializable{
     private int itemID;
     private String itemType;
     private String itemName;
-  
-     
+
     /**
      * @return the bookingID
      */
@@ -45,7 +43,7 @@ public class Booking implements Serializable{
         this.bookingID = bookingID;
     }
 
-        public String getBookDate() {
+    public String getBookDate() {
         return bookDate;
     }
 
@@ -54,7 +52,9 @@ public class Booking implements Serializable{
      */
     public void setBookDate(String bookDate) {
         this.bookDate = bookDate;
-    }/**
+    }
+
+    /**
      * @return the username
      */
     public String getUsername() {
@@ -79,11 +79,12 @@ public class Booking implements Serializable{
         return itemID;
     }
 
-     /* @param itemID the itemID to set
+    /* @param itemID the itemID to set
      */
     public void setItemID(int itemID) {
         this.itemID = itemID;
     }
+
     /**
      * @param courtID the courtID to set
      */
@@ -97,14 +98,13 @@ public class Booking implements Serializable{
     public String getCourtType() {
         return courtType;
     }
-    
-      /**
+
+    /**
      * @return the itemType
      */
     public String getItemType() {
         return itemType;
     }
-
 
     /**
      * @param courtType the courtType to set
@@ -113,12 +113,13 @@ public class Booking implements Serializable{
         this.courtType = courtType;
     }
 
-     /**
+    /**
      * @param itemType the itemType to set
      */
     public void setItemType(String itemType) {
         this.itemType = itemType;
     }
+
     /**
      * @return the bookingStat
      */
@@ -146,7 +147,8 @@ public class Booking implements Serializable{
     public void setCourtName(String courtName) {
         this.courtName = courtName;
     }
-        /**
+
+    /**
      * @return the itemName
      */
     public String getItemName() {
@@ -159,7 +161,6 @@ public class Booking implements Serializable{
     public void setItemName(String itemName) {
         this.itemName = itemName;
     }
-
 
     /**
      * @return the price
@@ -178,11 +179,11 @@ public class Booking implements Serializable{
     /**
      * @return the courtId
      */
-    
-    public String getPayStatus(){
+    public String getPayStatus() {
         return payStatus;
     }
-    public void setPayStatus(String payStatus){
+
+    public void setPayStatus(String payStatus) {
         this.payStatus = payStatus;
     }
 }
