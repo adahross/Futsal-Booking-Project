@@ -18,6 +18,7 @@
             </li>
             <li><a href="MainBookingServlet">MANAGE BOOKING</a></li>
             <li><a href="viewCourtServlet">MANAGE COURT</a></li>
+            <li><a href="viewItemServlet">MANAGE ITEM</a></li>
             <li><a href="adminLogout.jsp" class="button special">LOG OUT</a></li>
         </ul>
     </nav>

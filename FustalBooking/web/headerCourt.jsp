@@ -17,7 +17,7 @@
                 </ul>
             </li>
             <li><a href="viewAvailabiltyServlet">BOOK COURT</a></li>
-             <li><a href="ViewAvailabiltyItemServlet">BOOK ITEM</a></li>
+             <li><a href="ViewAvailabilityItemServlet">BOOK ITEM</a></li>
             <li><a href="userViewCourtServlet">BOOKING COURT LIST</a></li>
             <li><a href="userViewItemServlet">BOOKING ITEM LIST</a></li>
             <li><a href="HistoryBookingServlet">BOOKING HISTORY</a></li>

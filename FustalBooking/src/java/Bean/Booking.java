@@ -8,7 +8,7 @@ package Bean;
 import java.io.Serializable;
 /**
  *
- * @author Lumen
+ * @author User
  */
 public class Booking implements Serializable{
 
