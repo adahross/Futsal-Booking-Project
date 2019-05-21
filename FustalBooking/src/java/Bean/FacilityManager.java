@@ -6,30 +6,14 @@
 //  Original author: USER
 package Bean;
 
-abstract class FacilityManager implements Facility {
 
-    public FacilityManager instance;
-    public Item item;
-    public Court court;
+public interface FacilityManager {
 
-    public FacilityManager() {
+    static FacilityManager instance = null ;
+    public Item item = null;
+    public Court court = null;
 
-    }
 
-    public void CreateInstance(String facType) {
-
-        if (facType.equals("Court")) {
-            court = new Court();
-        } else if (facType.equals("Item")) {
-            item = new Item();
-        }
-
-    }
-
-    public FacilityManager getInstance() {
-
-        return instance;
-    }
-
-}//end FacilityManager
-
+    public void createInstance(String facType);
+   public FacilityManager getInstance();
+}

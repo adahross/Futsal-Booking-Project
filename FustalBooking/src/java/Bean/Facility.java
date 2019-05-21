@@ -10,13 +10,13 @@ package Bean;
  * @author USER
  */
 
-public interface Facility {
+abstract class Facility {
 
-	double getPrice();
+	abstract double getPrice();
 
-	void displayInfo();
+	abstract void displayInfo();
 	
-        void getAvailability();
+        abstract void getAvailability();
 	
 }//end Facility
 

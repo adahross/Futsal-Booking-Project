@@ -5,17 +5,17 @@
  */
 package Bean;
 
-import java.io.Serializable;
-
 /**
  *
  * @author User
  */
-public class Booking implements Serializable {
+public class Booking implements FacilityManager{
 
     /**
      * @return the bookDate
      */
+   Court court = new Court();
+   Item item = new Item();
     private int bookingID;
     private String username;
     private String bookingStat;
@@ -29,6 +29,7 @@ public class Booking implements Serializable {
     private String itemType;
     private String itemName;
 
+    
     /**
      * @return the bookingID
      */
@@ -47,6 +48,22 @@ public class Booking implements Serializable {
         return bookDate;
     }
 
+    @Override
+    public void createInstance(String facType){
+    
+      if (facType.equals("Court")) {
+            court = new Court();
+        } else if (facType.equals("Item")) {
+            item = new Item();
+        }
+   
+    }
+    
+    @Override
+    public FacilityManager getInstance(){
+    
+           return instance;
+    }
     /**
      * @param bookDate the bookDate to set
      */
