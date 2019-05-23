@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 05, 2019 at 10:24 AM
+-- Generation Time: May 23, 2019 at 05:30 AM
 -- Server version: 10.1.36-MariaDB
 -- PHP Version: 5.6.38
 
@@ -44,9 +44,6 @@ CREATE TABLE `booking` (
 --
 
 INSERT INTO `booking` (`bookingID`, `bookingStat`, `courtType`, `username`, `courtName`, `courtID`, `payStatus`, `book_date`) VALUES
-(1, 'approve', 'Court A', 'nsaadah32', 'Normal court', 4, 'approve', '2018-12-23'),
-(2, 'approve', 'Court B', 'nsaadah32', 'Fifa court', 2, 'approve', '2018-12-19'),
-(3, 'approve', 'Court B', 'slm', 'Normal Court', 5, 'approve', '2018-12-28'),
 (73, 'pending', 'Court A', 'nsaadah32', 'Normal court', 4, 'pending', '2018-11-28'),
 (74, 'pending', 'Court A', 'nsaadah32', 'Outdoor Court', 4, 'pending', '2019-01-01'),
 (75, 'pending', 'Court A', 'nsaadah32', 'Outdoor Court', 4, 'pending', '2019-01-01'),
@@ -55,6 +52,34 @@ INSERT INTO `booking` (`bookingID`, `bookingStat`, `courtType`, `username`, `cou
 (78, 'approve', 'Court A', 'afqh', 'Indoor Court', 1, 'approve', '2019-01-10'),
 (79, 'approve', 'Court B', 'afqh', 'Outdoor Court', 5, 'approve', '2019-01-11'),
 (81, 'approve', 'Court B', 'q', 'Outdoor Court', 5, 'pending', '2019-01-11');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bookingitem`
+--
+
+CREATE TABLE `bookingitem` (
+  `bookingID` int(5) NOT NULL,
+  `bookingStat` varchar(10) NOT NULL,
+  `itemType` varchar(20) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `itemName` varchar(20) NOT NULL,
+  `itemID` int(5) NOT NULL,
+  `payStatus` varchar(10) NOT NULL,
+  `book_date` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `bookingitem`
+--
+
+INSERT INTO `bookingitem` (`bookingID`, `bookingStat`, `itemType`, `username`, `itemName`, `itemID`, `payStatus`, `book_date`) VALUES
+(7, 'approve', 'Badmiinton', 'nsaadah32', 'Racquet', 1, 'approve', '2018-12-23'),
+(8, 'approve', 'Tennis', 'nsaadah32', 'Ball', 2, 'approve', '2018-12-19'),
+(9, 'approve', 'Volleyball', 'slm', 'Net', 3, 'approve', '2018-12-28'),
+(13, 'pending', 'Futsal', 'nsaadah32', 'Boot', 4, 'pending', '2018-11-28'),
+(24, 'pending', 'Ping Pong', 'nsaadah32', 'Bat', 5, 'pending', '2019-01-01');
 
 -- --------------------------------------------------------
 
@@ -114,6 +139,28 @@ INSERT INTO `creditcard` (`fullname`, `cvv`, `cardNo`, `month`, `year`, `payment
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `item`
+--
+
+CREATE TABLE `item` (
+  `itemID` int(11) NOT NULL,
+  `itemType` varchar(15) NOT NULL,
+  `itemName` varchar(10) NOT NULL,
+  `price` double NOT NULL,
+  `itemStat` varchar(15) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `item`
+--
+
+INSERT INTO `item` (`itemID`, `itemType`, `itemName`, `price`, `itemStat`) VALUES
+(1, 'Badminton', 'Racquet', 5, 'active'),
+(2, 'Tennis', 'Ball', 6, 'active');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `user`
 --
 
@@ -134,6 +181,7 @@ INSERT INTO `user` (`fullname`, `username`, `phoneNo`, `email`, `password`, `use
 ('Athira Balqis', 'abc', '01111412515', 'balqis@utm.my', '123', 99),
 ('afi', 'afqh', '0123456780', 'afqhanr28@gmail.com', '1234567', 0),
 ('Nurul Afiqah', 'afqhanr12', '0123456789', 'afqhanr28@gmail.com', '123456', 0),
+('Nur Saadah Bt Mohd Rosli', 'nsaadah123', '01112152923', 'darsarolly@gmail.com', 'adahogos97', 0),
 ('Nur Saadah Bt Mohd Rosli', 'nsaadah32', '01112152923', 'nursaadahmdrosli@gmail.com', 'adah2508', 0),
 ('q', 'q', '123456', 'q@gmail.com', 'r', 0),
 ('salma', 'slm', '123432232', 'slm@gmail.com', '1234abc', 0);
@@ -148,6 +196,12 @@ INSERT INTO `user` (`fullname`, `username`, `phoneNo`, `email`, `password`, `use
 ALTER TABLE `booking`
   ADD PRIMARY KEY (`bookingID`),
   ADD KEY `courtID` (`courtID`);
+
+--
+-- Indexes for table `bookingitem`
+--
+ALTER TABLE `bookingitem`
+  ADD PRIMARY KEY (`bookingID`);
 
 --
 -- Indexes for table `court`
@@ -178,10 +232,16 @@ ALTER TABLE `booking`
   MODIFY `bookingID` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
 
 --
+-- AUTO_INCREMENT for table `bookingitem`
+--
+ALTER TABLE `bookingitem`
+  MODIFY `bookingID` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+
+--
 -- AUTO_INCREMENT for table `court`
 --
 ALTER TABLE `court`
-  MODIFY `courtID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `courtID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `creditcard`
