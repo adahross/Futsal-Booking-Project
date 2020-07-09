@@ -5,8 +5,16 @@
  */
 package User;
 
-import Bean.Booking;
+import Bean.BookingCourt;
+import Bean.Court;
 import Bean.User;
+import JDBC.JDBCUtility;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -15,16 +23,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import jdbc.JDBCUtility;
 
 /**
- *
  * @author Salma
  */
 @WebServlet(name = "RequestBookingServlet", urlPatterns = {"/RequestBookingServlet"})
@@ -54,10 +54,10 @@ public class RequestBookingServlet extends HttpServlet {
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -101,7 +101,8 @@ public class RequestBookingServlet extends HttpServlet {
                 String sqlQuery = "SELECT * FROM booking";
                 preparedStatement = con.prepareStatement(sqlQuery);
                 ResultSet rs = preparedStatement.executeQuery();
-                Booking br = new Booking();
+                BookingCourt br = new BookingCourt();
+                Court court = new Court();
                 while (rs.next()) {
 
                     int court_ID = rs.getInt("courtID");
@@ -113,14 +114,15 @@ public class RequestBookingServlet extends HttpServlet {
                     String bookdate = rs.getString("book_date");
                     String uname = rs.getString("username");
 
-                    br.setCourtID(court_ID);
+                    court.setCourtID(court_ID);
                     br.setUsername(uname);
                     br.setBookDate(bookdate);
-                    br.setCourtType(cType);
+                    court.setCourtType(cType);
                     br.setBookingStat(bookingStat);
                     br.setPayStatus(payStatus);
                     br.setBookingID(bookID);
-                    br.setCourtName(cName);
+                    court.setCourtName(cName);
+                    br.setCourt(court);
 
                 }
 
@@ -137,13 +139,14 @@ public class RequestBookingServlet extends HttpServlet {
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+
     /**
      * Handles the HTTP <code>GET</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -154,10 +157,10 @@ public class RequestBookingServlet extends HttpServlet {
     /**
      * Handles the HTTP <code>POST</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)

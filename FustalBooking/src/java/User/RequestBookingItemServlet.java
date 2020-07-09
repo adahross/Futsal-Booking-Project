@@ -5,8 +5,16 @@
  */
 package User;
 
-import Bean.Booking;
+import Bean.BookingItem;
+import Bean.Item;
 import Bean.User;
+import JDBC.JDBCUtility;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -15,16 +23,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import jdbc.JDBCUtility;
 
 /**
- *
  * @author USER
  */
 @WebServlet(name = "RequestBookingItemServlet", urlPatterns = {"/RequestBookingItemServlet"})
@@ -54,10 +54,10 @@ public class RequestBookingItemServlet extends HttpServlet {
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -82,8 +82,7 @@ public class RequestBookingItemServlet extends HttpServlet {
             try {
 
                 date = formatter.parse(book_date);
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
             }
 
             //convert to mysql date
@@ -108,7 +107,8 @@ public class RequestBookingItemServlet extends HttpServlet {
                 String sqlQuery = "SELECT * FROM bookingitem";
                 preparedStatement = con.prepareStatement(sqlQuery);
                 ResultSet rs = preparedStatement.executeQuery();
-                Booking br = new Booking();
+                BookingItem bookingitem = new BookingItem();
+                Item item = new Item();
                 while (rs.next()) {
 
                     int item_ID = rs.getInt("itemID");
@@ -120,18 +120,18 @@ public class RequestBookingItemServlet extends HttpServlet {
                     String bookdate = rs.getString("book_date");
                     String uname = rs.getString("username");
 
-                    br.setItemID(item_ID);
-                    br.setUsername(uname);
-                    br.setBookDate(bookdate);
-                    br.setItemType(cType);
-                    br.setBookingStat(bookingStat);
-                    br.setPayStatus(payStatus);
-                    br.setBookingID(bookID);
-                    br.setItemName(cName);
+                    item.setItemID(item_ID);
+                    bookingitem.setUsername(uname);
+                    bookingitem.setBookDate(bookdate);
+                    item.setItemType(cType);
+                    bookingitem.setBookingStat(bookingStat);
+                    bookingitem.setPayStatus(payStatus);
+                    bookingitem.setBookingID(bookID);
+                    item.setItemName(cName);
 
                 }
 
-                session.setAttribute("newly", br);
+                session.setAttribute("newly", bookingitem);
 
                 response.sendRedirect(request.getContextPath() + "/requestitemstatus.jsp");
             } catch (SQLException ex) {
@@ -145,13 +145,14 @@ public class RequestBookingItemServlet extends HttpServlet {
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+
     /**
      * Handles the HTTP <code>GET</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -162,10 +163,10 @@ public class RequestBookingItemServlet extends HttpServlet {
     /**
      * Handles the HTTP <code>POST</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)

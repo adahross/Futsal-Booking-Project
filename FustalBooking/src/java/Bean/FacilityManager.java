@@ -9,11 +9,12 @@ package Bean;
 
 public interface FacilityManager {
 
-    static FacilityManager instance = null ;
+    static FacilityManager instance = null;
     public Item item = null;
     public Court court = null;
 
 
     public void createInstance(String facType);
-   public FacilityManager getInstance();
+
+    public FacilityManager getInstance();
 }

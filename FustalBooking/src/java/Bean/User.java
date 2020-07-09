@@ -8,12 +8,15 @@ package Bean;
 import java.io.Serializable;
 
 /**
- *
  * @author User
  */
 public class User implements Serializable {
 
-    private String username, email, password, fullname, phoneNo;
+    private String username,
+    email , 
+    password, 
+    fullname, 
+    phoneNo;
     private int usertype, bookingID;
 
     /**

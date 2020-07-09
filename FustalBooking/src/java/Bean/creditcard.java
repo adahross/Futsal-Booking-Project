@@ -8,7 +8,6 @@ package Bean;
 import java.io.Serializable;
 
 /**
- *
  * @author USER
  */
 public class creditcard implements Serializable {

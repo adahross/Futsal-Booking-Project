@@ -5,8 +5,16 @@
  */
 package User;
 
-import Bean.Booking;
+import Bean.BookingCourt;
+import Bean.Court;
 import Bean.User;
+import JDBC.JDBCUtility;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -16,16 +24,8 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import jdbc.JDBCUtility;
 
 /**
- *
  * @author Bal
  */
 @WebServlet(name = "userViewCourtServlet", urlPatterns = {"/userViewCourtServlet"})
@@ -101,10 +101,11 @@ public class userViewCourtServlet extends HttpServlet {
                     //convert mysql date to MY date
                     formatter = new SimpleDateFormat("dd-MM-yyyy");
                     bookdate = formatter.format(date);
-
-                    Booking bk = new Booking();
-                    bk.setCourtName(courtName);
-                    bk.setCourtType(courtType);
+                    Court court = new Court();
+                    BookingCourt bk = new BookingCourt();
+                    court.setCourtName(courtName);
+                    court.setCourtType(courtType);
+                    bk.setCourt(court);
                     bk.setBookingStat(bookingStat);
                     bk.setPayStatus(payStatus);
                     bk.setPrice(price);

@@ -5,8 +5,16 @@
  */
 package User;
 
-import Bean.Booking;
+import Bean.BookingCourt;
+import Bean.Court;
 import Bean.User;
+import JDBC.JDBCUtility;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -16,16 +24,8 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import jdbc.JDBCUtility;
 
 /**
- *
  * @author USER
  */
 @WebServlet(name = "HistoryBookingServlet", urlPatterns = {"/HistoryBookingServlet"})
@@ -81,6 +81,7 @@ public class HistoryBookingServlet extends HttpServlet {
                 ResultSet rs = preparedStatement.executeQuery();
 
                 while (rs.next()) {
+                    int courtID = rs.getInt("courtID");
                     String courtName = rs.getString("courtName");
                     String courtType = rs.getString("courtType");
                     String bookingStat = rs.getString("bookingStat");
@@ -101,15 +102,22 @@ public class HistoryBookingServlet extends HttpServlet {
                     //convert mysql date to MY date
                     formatter = new SimpleDateFormat("dd-MM-yyyy");
                     bookdate = formatter.format(date);
+                    Court court = new Court();
+                    court.setCourtID(courtID);
+                    court.setCourtName(courtName);
+                    court.setCourtType(courtType);
 
-                    Booking bk = new Booking();
-                    bk.setCourtName(courtName);
-                    bk.setCourtType(courtType);
-                    bk.setBookingStat(bookingStat);
-                    bk.setPayStatus(payStatus);
+                    BookingCourt bk = new BookingCourt();
                     bk.setPrice(price);
                     bk.setBookingID(bookingID);
+                    bk.setBookingStat(bookingStat);
+                    bk.setUsername(username);
                     bk.setBookDate(bookdate);
+                    bk.setPayStatus(payStatus);
+                    bk.setCourt(court);
+
+                    System.out.println(bk.getBookingID());
+
                     rqCourtList.add(bk);
                 }
             } catch (SQLException ex) {

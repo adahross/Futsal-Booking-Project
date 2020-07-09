@@ -6,18 +6,17 @@
 package Bean;
 
 /**
- *
  * @author USER
  */
 
 abstract class Facility {
 
-	abstract double getPrice();
+    abstract double getPrice();
 
-	abstract void displayInfo();
-	
-        abstract void getAvailability();
-	
+    abstract void displayInfo();
+
+    abstract void getAvailability();
+
 }//end Facility
 
 

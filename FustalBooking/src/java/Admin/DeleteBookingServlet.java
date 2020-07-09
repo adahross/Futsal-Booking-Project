@@ -5,8 +5,15 @@
  */
 package Admin;
 
-import Bean.Booking;
-//import Bean.Court;
+import Bean.BookingCourt;
+import Bean.Court;
+import JDBC.JDBCUtility;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -14,16 +21,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import jdbc.JDBCUtility;
 
+//import Bean.Court;
 /**
- *
  * @author USER
  */
 @WebServlet(name = "DeleteBookingServlet", urlPatterns = {"/DeleteBookingServlet"})
@@ -75,7 +75,7 @@ public class DeleteBookingServlet extends HttpServlet {
                 preparedStatement.setInt(1, bookID);
                 preparedStatement.executeUpdate();
 
-                String sqlQuery = "SELECT booking.username, booking.bookingID, booking.bookingStat, booking.book_date,court.courtType, court.courtName"
+                String sqlQuery = "SELECT *"
                         + " FROM booking, court"
                         + " WHERE booking.courtID = court.courtID"
                         + " ORDER BY  bookingID ASC";
@@ -84,19 +84,26 @@ public class DeleteBookingServlet extends HttpServlet {
                 ResultSet rs = preparedStatement.executeQuery();
 
                 while (rs.next()) {
+
                     int bookingID = Integer.parseInt(rs.getString("bookingID"));
                     String bookingStat = rs.getString("bookingStat");
                     String username = rs.getString("username");
-                    String courtType = rs.getString("courtType");
+                    int courtID = rs.getInt("courtID");
                     String courtName = rs.getString("courtName");
+                    String courtType = rs.getString("courtType");
+                    double courtprice = rs.getDouble("price");
                     String bookingDate = rs.getString("book_date");
 
-                    Booking bk = new Booking();
+                    Court court = new Court();
+                    BookingCourt bk = new BookingCourt();
                     bk.setBookingID(bookingID);
                     bk.setBookingStat(bookingStat);
                     bk.setUsername(username);
-                    bk.setCourtType(courtType);
-                    bk.setCourtName(courtName);
+                    court.setCourtType(courtType);
+                    court.setCourtName(courtName);
+                    court.setCourtID(courtID);
+                    court.setPrice(courtprice);
+                    bk.setCourt(court);
                     bk.setBookDate(bookingDate);
                     System.out.println(bk.getBookingID());
                     bkList.add(bk);
