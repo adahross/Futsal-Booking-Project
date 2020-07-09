@@ -60,8 +60,8 @@
                                     <c:forEach items="${sessionScope.rqcourtlist}" var="court" varStatus="loop">
                                         <tr>
                                             <td><c:out value="${loop.index + 1}" /> </td>
-                                            <td><c:out value="${court.courtName}" /> </td>
-                                            <td><c:out value="${court.courtType}" /> </td>
+                                            <td><c:out value="${court.court.courtName}" /> </td>
+                                            <td><c:out value="${court.court.courtType}" /> </td>
                                             <td><c:out value="${court.price}" /> </td>
                                             <td><c:out value="${court.bookDate}"/> </td>
                                             <td><c:out value="${court.bookingStat}"/> </td>

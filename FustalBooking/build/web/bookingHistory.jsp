@@ -9,7 +9,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page import="Bean.User" %>
 <%@ page import="Bean.creditcard" %>
-<%@ page import="Bean.Booking" %>
+<%@ page import="Bean.BookingCourt" %>
 <%@ page import="java.util.ArrayList" %>
 <c:if test="${sessionScope.memberprofile == null}">
     <% response.sendRedirect(request.getContextPath() + "/sessionterminate.jsp");%>
@@ -101,8 +101,8 @@
                                     <c:forEach items="${sessionScope.rqcourtlist}" var="court" varStatus="loop">
                                         <tr>
                                             <td><c:out value="${loop.index + 1}" /> </td>
-                                            <td><c:out value="${court.courtName}" /> </td>
-                                            <td><c:out value="${court.courtType}" /> </td>
+                                            <td><c:out value="${court.court.courtName}" /> </td>
+                                            <td><c:out value="${court.court.courtType}" /> </td>
                                             <td><c:out value="${court.price}" /> </td>
                                             <td><c:out value="${court.bookDate}"/> </td>
                                             <td><c:out value="${court.bookingStat}"/> </td>

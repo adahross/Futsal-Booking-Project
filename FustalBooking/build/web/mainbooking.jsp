@@ -7,7 +7,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page import="Bean.User" %>
-<%@ page import="Bean.Booking" %>
+<%@ page import="Bean.BookingCourt" %>
 <%@ page import="java.util.ArrayList" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <c:if test="${sessionScope.adminprofile == null}">
@@ -65,8 +65,8 @@
                                             <td><c:out value="${loop.index + 1}" /></td>    
                                             <td><c:out value="${booking.username}" /></td>
                                             <td><c:out value="${booking.bookingID}" /></td>
-                                            <td><c:out value="${booking.courtName}" /></td>
-                                            <td><c:out value="${booking.courtType}" /></td>
+                                            <td><c:out value="${booking.court.courtName}" /></td>
+                                            <td><c:out value="${booking.court.courtType}" /></td>
                                              <td><c:out value="${booking.bookDate}" /></td>
                                             <!--
                                             <td><c:out value="${booking.bookingStat}" /></td> -->
@@ -74,9 +74,9 @@
                                             <c:if test="${booking.bookingStat == 'pending'}">
                                                 <c:url value="bookingapproval.jsp" var="displayURL">
                                                     <c:param name="bookingID" value="${booking.bookingID}" />
-                                                    <c:param name="courtName" value="${booking.courtName}" />
+                                                    <c:param name="courtName" value="${booking.court.courtName}" />
                                                     <c:param name="username" value="${booking.username}" /> 
-                                                    <c:param name="courtType" value="${booking.courtType}" />
+                                                    <c:param name="courtType" value="${booking.court.courtType}" />
                                                 </c:url>
                                                 <td><a href="<c:out value='${displayURL}' />"><b><c:out value="${booking.bookingStat}" /></b></a></td>
                                                 </c:if>

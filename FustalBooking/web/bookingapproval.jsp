@@ -11,11 +11,11 @@
 <c:if test="${sessionScope.adminprofile == null}">
     <% response.sendRedirect(request.getContextPath() + "/adminSessionTerminate.jsp"); %>
 </c:if>
-<jsp:useBean id="bookrq" class="Bean.Booking" scope="page">
+<jsp:useBean id="bookrq" class="Bean.BookingCourt" scope="page">
     <jsp:setProperty name="bookrq" property="bookingID" value="${param.bookingID}"/>
-    <jsp:setProperty name="bookrq" property="courtName" value="${param.courtName}"/>
+  
     <jsp:setProperty name="bookrq" property="username" value="${param.username}"/>
-    <jsp:setProperty name="bookrq" property="courtType" value="${param.courtType}"/>
+    
 </jsp:useBean>
 
 <html>
@@ -74,17 +74,6 @@
 										</div>
 								</div>
 								
-								<div class="row uniform 50%">
-										<div class="6u -3u">
-											Court Name<br><input type="text" name="courtName" id="courtName" value="<jsp:getProperty name="bookrq" property="courtName" />" disabled>
-										</div>
-								</div>
-								
-								<div class="row uniform 50%">
-										<div class="6u -3u">
-											Court Type<br><input type="text" name="courtType" id="courtType" value="<jsp:getProperty name="bookrq" property="courtType" />" disabled>
-										</div>
-								</div>
 								
 								<div class="row uniform 50%">
 									<div class="6u -3u">
