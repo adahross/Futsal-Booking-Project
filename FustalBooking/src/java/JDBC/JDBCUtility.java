@@ -2,13 +2,14 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package jdbc;
+package JDBC;
 
-import java.util.*;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 /**
- *
  * @author User
  */
 public class JDBCUtility {
@@ -26,9 +27,9 @@ public class JDBCUtility {
     //use this constructor if not using ConnectionPool
     //ConnectionPool is used for multi user!
     public JDBCUtility(String driver,
-            String url,
-            String userName,
-            String password) {
+                       String url,
+                       String userName,
+                       String password) {
         this.driver = driver;
         this.url = url;
         this.userName = userName;
