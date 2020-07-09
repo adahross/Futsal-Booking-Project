@@ -9,100 +9,10 @@ package Bean;
  * @author User
  */
 
-public class BookingCourt {
+public class BookingCourt extends Booking{
 
-    /**
-     *
-     * @return the bookingID
-     */
-    private int bookingID;
-    private String username;
-    private String bookingStat;
-    private double price;
-    private String payStatus;
-    private String bookDate;
     private Court court = new Court();
     
-    public int getBookingID() {
-        return bookingID;
-    }
-
-    /**
-     * @param bookingID the bookingID to set
-     */
-    public void setBookingID(int bookingID) {
-        this.bookingID = bookingID;
-    }
-
-    /**
-     * @return the username
-     */
-    public String getUsername() {
-        return username;
-    }
-
-    /**
-     * @param username the username to set
-     */
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    /**
-     * @return the bookingStat
-     */
-    public String getBookingStat() {
-        return bookingStat;
-    }
-
-    /**
-     * @param bookingStat the bookingStat to set
-     */
-    public void setBookingStat(String bookingStat) {
-        this.bookingStat = bookingStat;
-    }
-
-    /**
-     * @return the price
-     */
-    public double getPrice() {
-        return price;
-    }
-
-    /**
-     * @param price the price to set
-     */
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    /**
-     * @return the payStatus
-     */
-    public String getPayStatus() {
-        return payStatus;
-    }
-
-    /**
-     * @param payStatus the payStatus to set
-     */
-    public void setPayStatus(String payStatus) {
-        this.payStatus = payStatus;
-    }
-
-    /**
-     * @return the bookDate
-     */
-    public String getBookDate() {
-        return bookDate;
-    }
-
-    /**
-     * @param bookDate the bookDate to set
-     */
-    public void setBookDate(String bookDate) {
-        this.bookDate = bookDate;
-    }
 
     /**
      * @return the court
